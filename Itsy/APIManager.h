@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
+
 @interface APIManager : AFHTTPRequestOperationManager
 
 +(APIManager*)sharedManager;
--(AFHTTPRequestOperation*)searchWithKeywordString:(NSString*)keywordString callback:(void (^)(id json, AFHTTPRequestOperation *operation, NSError* error))callback;
+
+// in a fleshed out app, the method would take a dict of params as input, as opposed to just a keyword string
+-(AFHTTPRequestOperation*)getActiveListings:(NSString*)keywordString callback:(void (^)(NSArray *listings, AFHTTPRequestOperation *operation, NSError* error))callback;
 
 @end

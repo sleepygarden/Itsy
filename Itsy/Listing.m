@@ -16,7 +16,7 @@
         self.price = json[@"price"];
         self.title = json[@"title"];
         NSDictionary *mainImage = json[@"MainImage"];
-        self.imgURL = mainImage[@"url_75x75"];
+        self.imgURL = [NSURL URLWithString:mainImage[@"url_75x75"]];
         self.favorers = [json[@"favorers"] unsignedIntegerValue];
     }
     return self;
