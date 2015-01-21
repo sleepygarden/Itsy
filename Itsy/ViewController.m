@@ -7,10 +7,17 @@
 //
 
 #import "ViewController.h"
-#include "APIManager.h"
+#import "APIManager.h"
+#import "Listing.h"
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
-@interface ViewController ()
+@interface ViewController () <UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) APIManager* sharedManager;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *searchBarOffset;
+
+@property (strong, nonatomic) NSArray *listings;
 @end
 
 @implementation ViewController
@@ -20,21 +27,55 @@
     
     self.sharedManager = [APIManager sharedManager];
     
-    [self.sharedManager searchWithKeywordString:@"cats,dogs" callback:^(id json, AFHTTPRequestOperation *operation, NSError *error) {
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
+    self.tableView.backgroundColor = [UIColor colorWithRed:.9 green:.9 blue:.9 alpha:1];
+    
+    self.searchBarOffset.constant = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
+    [self.view layoutIfNeeded];
+    
+    [self.sharedManager getActiveListings:@"cats,dogs" callback:^(NSArray *listings, AFHTTPRequestOperation *operation, NSError *error) {
         if (error){
-            NSLog(@"error getting listing!");
-            NSLog(@"%@",error.localizedDescription);
-            NSLog(@"%@",operation.request.URL);
+            NSLog(@"error getting listing: %@",error.localizedDescription);
         }
         else {
-            NSLog(@"%@ \n%@",[json class],json);
+            self.listings = listings;
+            [self.tableView reloadData];
         }
     }];    
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+//
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    self.searchBarOffset.constant = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
+    [self.view layoutIfNeeded];
+}
+//
+
+#pragma mark - UITableView Delegate + Datasource
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *CellIdentifier = @"TableCell";
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    
+    Listing *listing = self.listings[indexPath.row];
+    cell.textLabel.text = listing.title;
+    [cell.imageView setImageWithURL:listing.imgURL placeholderImage:[UIImage imageNamed:@"ScreenShot"]];
+    
+    return cell;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.listings.count;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 80;
 }
 
 @end

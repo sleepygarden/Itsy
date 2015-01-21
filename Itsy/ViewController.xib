@@ -7,22 +7,53 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
-                <outlet property="view" destination="iN0-l3-epB" id="jYd-j0-PVg"/>
+                <outlet property="searchBar" destination="ioH-tw-Vkq" id="HQ6-oj-5rY"/>
+                <outlet property="searchBarOffset" destination="rqg-F4-x6f" id="wqz-jc-TDJ"/>
+                <outlet property="searchDisplayController" destination="b0m-mZ-gIh" id="Zve-hK-ga1"/>
+                <outlet property="tableView" destination="bzC-yn-r76" id="vIT-pT-Q13"/>
+                <outlet property="view" destination="CpE-qi-ZWn" id="stc-yR-oKu"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view contentMode="scaleToFill" id="CpE-qi-ZWn">
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Test" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hpw-nz-oWJ">
-                    <rect key="frame" x="279" y="289" width="32" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="bzC-yn-r76">
+                    <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="ioH-tw-Vkq">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="88n-xE-hKb"/>
+                    </constraints>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="dka-26-dXH"/>
+                    </connections>
+                </searchBar>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="bzC-yn-r76" firstAttribute="top" secondItem="ioH-tw-Vkq" secondAttribute="bottom" id="3K8-My-blZ"/>
+                <constraint firstAttribute="trailing" secondItem="ioH-tw-Vkq" secondAttribute="trailing" id="IOG-aa-2i4"/>
+                <constraint firstItem="bzC-yn-r76" firstAttribute="leading" secondItem="CpE-qi-ZWn" secondAttribute="leading" id="QGo-JI-4Vh"/>
+                <constraint firstAttribute="trailing" secondItem="bzC-yn-r76" secondAttribute="trailing" id="Vi4-Du-DNL"/>
+                <constraint firstItem="ioH-tw-Vkq" firstAttribute="leading" secondItem="CpE-qi-ZWn" secondAttribute="leading" id="kTd-nN-tbQ"/>
+                <constraint firstAttribute="bottom" secondItem="bzC-yn-r76" secondAttribute="bottom" id="l0K-A5-FcN"/>
+                <constraint firstItem="ioH-tw-Vkq" firstAttribute="top" secondItem="CpE-qi-ZWn" secondAttribute="top" id="rqg-F4-x6f"/>
+            </constraints>
+            <point key="canvasLocation" x="-252" y="161"/>
         </view>
+        <searchDisplayController id="b0m-mZ-gIh">
+            <connections>
+                <outlet property="delegate" destination="-1" id="tMG-DP-26S"/>
+                <outlet property="searchBar" destination="ioH-tw-Vkq" id="i1D-ik-OGR"/>
+                <outlet property="searchContentsController" destination="-1" id="64B-j5-O7f"/>
+                <outlet property="searchResultsDataSource" destination="-1" id="ikI-jd-abc"/>
+                <outlet property="searchResultsDelegate" destination="-1" id="97Y-Uz-sDb"/>
+            </connections>
+        </searchDisplayController>
     </objects>
 </document>
