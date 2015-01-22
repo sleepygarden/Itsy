@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "Utils.h"
+
 @interface AppDelegate ()
 
 @end
@@ -17,6 +19,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    //[Utils testHTMLCleaner];
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     UIWindow *window = [[UIWindow alloc] initWithFrame:screenBounds];
     
