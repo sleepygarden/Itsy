@@ -36,12 +36,13 @@
     AFHTTPRequestOperation *operation = [self GET:@"listings/active/" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         // total count
-        // NSUInteger count = [responseObject[@"count"] unsignedIntegerValue];
+        NSUInteger count = [responseObject[@"count"] unsignedIntegerValue];
         
         // pagination info
-        // NSDictionary *paginationResp = responseObject[@"pagination"];
+        NSDictionary *paginationResp = responseObject[@"pagination"];
         
-        NSLog(@"got results");
+        NSLog(@"got results count %lu\npagination: %@", count,paginationResp);
+        
         NSArray *results = responseObject[@"results"];
         NSMutableArray *listings = [NSMutableArray new];
         

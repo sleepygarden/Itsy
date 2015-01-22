@@ -10,6 +10,7 @@
 #import "APIManager.h"
 #import "ListingCell.h"
 #import "Listing.h"
+#import "LoadingCell.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate, UISearchResultsUpdating>
@@ -20,26 +21,39 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableViewYOffset;
 
-@property (strong, nonatomic) NSArray *listings;
+@property (strong, nonatomic) NSMutableArray *listings;
 @property (strong, nonatomic) NSMutableArray *filteredListings;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+
+@property (nonatomic) BOOL isFetchingMoreListings;
+
 @end
 
 @implementation ViewController
 
+#pragma mark - Setup
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.sharedManager = [APIManager sharedManager];
     
+    self.listings = [NSMutableArray new];
+    self.filteredListings = [NSMutableArray new];
+    
+    self.isFetchingMoreListings = NO;
+    
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    self.tableView.backgroundColor = [UIColor colorWithRed:.9 green:.9 blue:.9 alpha:1];
+    [self resizeTableViewUnderStatusBar];
+    self.tableView.separatorColor = [UIColor clearColor]; // hide seps
     
-    self.tableViewYOffset.constant = [[UIApplication sharedApplication] statusBarFrame].size.height;
-    [self.view layoutIfNeeded];
+    [self setupSearchController];
     
+    [self fetchMoreListings];
+    
+}
+
+-(void)setupSearchController {
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
@@ -48,61 +62,103 @@
                                                        self.searchController.searchBar.frame.origin.y,
                                                        self.searchController.searchBar.frame.size.width,
                                                        44.0);
-    
     self.tableView.tableHeaderView = self.searchController.searchBar;
-    self.tableView.separatorColor = [UIColor clearColor];
-        
-    [self.spinner startAnimating];
-    self.spinner.hidesWhenStopped = YES;
-
-    [self.sharedManager getActiveListings:@"cats,dogs" callback:^(NSArray *listings, AFHTTPRequestOperation *operation, NSError *error) {
-        [self.spinner stopAnimating];
-        if (error){
-            NSLog(@"error getting listing: %@",error.localizedDescription);
-        }
-        else {
-            self.listings = listings;
-            self.filteredListings = [self.listings mutableCopy];
-            [self.tableView reloadData];
-        }
-    }];
+    
 }
 
-//
+#pragma mark -
+-(void)addLoadingSpinner{
+    self.isFetchingMoreListings = YES;
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.filteredListings.count inSection:0]]
+                          withRowAnimation:UITableViewRowAnimationTop];
+    [self.tableView endUpdates];
+    
+}
 
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+-(void)removeLoadingSpinner{
+    self.isFetchingMoreListings = NO;
+    [self.tableView beginUpdates];
+    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.filteredListings.count inSection:0]]
+                          withRowAnimation:UITableViewRowAnimationTop];
+    [self.tableView endUpdates];
+}
+-(void)resizeTableViewUnderStatusBar {
     self.tableViewYOffset.constant = [[UIApplication sharedApplication] statusBarFrame].size.height;
     [self.view layoutIfNeeded];
 }
-//
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self resizeTableViewUnderStatusBar];
+}
+
+-(void)fetchMoreListings {
+    if (!self.isFetchingMoreListings){
+        NSLog(@"fetching more");
+        [self addLoadingSpinner];
+        [self.sharedManager getActiveListings:@"collars" callback:^(NSArray *listings, AFHTTPRequestOperation *operation, NSError *error) {
+            [self removeLoadingSpinner];
+            if (error){
+                NSLog(@"error getting listing: %@",error.localizedDescription);
+            }
+            else {
+                NSMutableArray *indexPaths = [NSMutableArray new];
+                for (Listing *newListing in listings){
+                    [self.listings addObject:newListing];
+                    [indexPaths addObject:[NSIndexPath indexPathForRow:self.listings.count-1 inSection:0]];
+                }
+                self.filteredListings = [self.listings mutableCopy];
+                [self.tableView beginUpdates];
+                [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+                [self.tableView endUpdates];
+            }
+        }];
+    }
+}
 
 #pragma mark - UITableView Delegate + Datasource
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellIdentifier = @"ListingCell";
-    ListingCell *cell = (ListingCell*)[self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (cell == nil) {
-        NSLog(@"uh oh");
-        cell = [[NSBundle mainBundle] loadNibNamed:cellIdentifier owner:self options:nil][0];
+    if (indexPath.row == self.filteredListings.count){ // loading cell
+        static NSString *loadingCellIdentifier = @"LoadingCell";
+        LoadingCell *cell = (LoadingCell*)[self.tableView dequeueReusableCellWithIdentifier:loadingCellIdentifier];
+        if (cell == nil) {
+            [self.tableView registerNib:[UINib nibWithNibName:loadingCellIdentifier bundle:nil] forCellReuseIdentifier:loadingCellIdentifier];
+            cell = [self.tableView dequeueReusableCellWithIdentifier:loadingCellIdentifier];
+        }
+        return cell;
     }
-    
-    [cell setupWithListing:self.listings[indexPath.row]];
-    NSLog(@"cell height %fx%f",cell.listingImage.frame.size.width,cell.listingImage.frame.size.height);
-    NSLog(@"img %@",NSStringFromCGSize(cell.listingImage.image.size));
-    return cell;
+    else { // listing cell
+        static NSString *listingCellIdentifier = @"ListingCell";
+        ListingCell *cell = (ListingCell*)[self.tableView dequeueReusableCellWithIdentifier:listingCellIdentifier];
+        if (cell == nil) {
+            [self.tableView registerNib:[UINib nibWithNibName:listingCellIdentifier bundle:nil] forCellReuseIdentifier:listingCellIdentifier];
+            cell = [self.tableView dequeueReusableCellWithIdentifier:listingCellIdentifier];
+        }
+        [cell setupWithListing:self.filteredListings[indexPath.row]];
+        return cell;
+    }
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.filteredListings.count;
+    return self.filteredListings.count + (self.isFetchingMoreListings ? 1:0);
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [ListingCell cellHeight];
+    if (indexPath.row == self.filteredListings.count){ // loading cell
+        return [LoadingCell cellHeight];
+    }
+    else {
+        return [ListingCell cellHeight];
+    }
 }
 
-// clips trailing empty cells
--(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    return [[UIView alloc] initWithFrame:CGRectZero];
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    // request once last item starts to ~appear in feed
+    if (scrollView.contentOffset.y >= scrollView.contentSize.height - [ListingCell cellHeight]*4) {
+        if (!self.isFetchingMoreListings){
+            [self fetchMoreListings];
+        }
+    }
 }
 
 #pragma mark - UISearchController
