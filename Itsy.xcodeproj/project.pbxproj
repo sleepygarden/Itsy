@@ -18,6 +18,9 @@
 		BE4C07D61A6FF845008F5D7F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE4C07D41A6FF845008F5D7F /* LaunchScreen.xib */; };
 		BE4C07E21A6FF845008F5D7F /* ItsyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4C07E11A6FF845008F5D7F /* ItsyTests.m */; };
 		BEF0613E1A700E60006E519C /* Listing.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF0613D1A700E60006E519C /* Listing.m */; };
+		BEF061431A703961006E519C /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF061421A703961006E519C /* Utils.m */; };
+		BEF061471A706523006E519C /* ListingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF061461A706523006E519C /* ListingCell.m */; };
+		BEF0614A1A706534006E519C /* ListingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEF061491A706534006E519C /* ListingCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +55,11 @@
 		BE4C07E11A6FF845008F5D7F /* ItsyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ItsyTests.m; sourceTree = "<group>"; };
 		BEF0613C1A700E60006E519C /* Listing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Listing.h; sourceTree = "<group>"; };
 		BEF0613D1A700E60006E519C /* Listing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Listing.m; sourceTree = "<group>"; };
+		BEF061411A703961006E519C /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		BEF061421A703961006E519C /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
+		BEF061451A706523006E519C /* ListingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListingCell.h; sourceTree = "<group>"; };
+		BEF061461A706523006E519C /* ListingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListingCell.m; sourceTree = "<group>"; };
+		BEF061491A706534006E519C /* ListingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListingCell.xib; sourceTree = "<group>"; };
 		F5ECF2FAFF9FAB02E0D6D882 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -142,12 +150,13 @@
 		BE4C07C41A6FF845008F5D7F /* Itsy */ = {
 			isa = PBXGroup;
 			children = (
-				BE4C07C91A6FF845008F5D7F /* AppDelegate.h */,
-				BE4C07CA1A6FF845008F5D7F /* AppDelegate.m */,
+				BEF061401A703954006E519C /* AppDelegate */,
 				BE365A7D1A70065400AAFCD8 /* APIManager */,
 				BE365A811A7007B600AAFCD8 /* Constants */,
 				BEF0613F1A700E64006E519C /* Listing */,
+				BEF061481A706527006E519C /* ListingCell */,
 				BE0DE88D1A6FFE36001861D7 /* ViewController */,
+				BEF061441A703965006E519C /* Utils */,
 				BE4C07D21A6FF845008F5D7F /* Images.xcassets */,
 				BE4C07D41A6FF845008F5D7F /* LaunchScreen.xib */,
 				BE4C07C51A6FF845008F5D7F /* Supporting Files */,
@@ -188,6 +197,34 @@
 				BEF0613D1A700E60006E519C /* Listing.m */,
 			);
 			name = Listing;
+			sourceTree = "<group>";
+		};
+		BEF061401A703954006E519C /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				BE4C07C91A6FF845008F5D7F /* AppDelegate.h */,
+				BE4C07CA1A6FF845008F5D7F /* AppDelegate.m */,
+			);
+			name = AppDelegate;
+			sourceTree = "<group>";
+		};
+		BEF061441A703965006E519C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				BEF061411A703961006E519C /* Utils.h */,
+				BEF061421A703961006E519C /* Utils.m */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		BEF061481A706527006E519C /* ListingCell */ = {
+			isa = PBXGroup;
+			children = (
+				BEF061451A706523006E519C /* ListingCell.h */,
+				BEF061461A706523006E519C /* ListingCell.m */,
+				BEF061491A706534006E519C /* ListingCell.xib */,
+			);
+			name = ListingCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -272,6 +309,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEF0614A1A706534006E519C /* ListingCell.xib in Resources */,
 				BE4C07D61A6FF845008F5D7F /* LaunchScreen.xib in Resources */,
 				BE0DE88C1A6FFE30001861D7 /* ViewController.xib in Resources */,
 				BE4C07D31A6FF845008F5D7F /* Images.xcassets in Resources */,
@@ -327,9 +365,11 @@
 			files = (
 				BEF0613E1A700E60006E519C /* Listing.m in Sources */,
 				BE365A801A7007B300AAFCD8 /* Constants.m in Sources */,
+				BEF061471A706523006E519C /* ListingCell.m in Sources */,
 				BE365A7C1A70065000AAFCD8 /* APIManager.m in Sources */,
 				BE4C07CE1A6FF845008F5D7F /* ViewController.m in Sources */,
 				BE4C07CB1A6FF845008F5D7F /* AppDelegate.m in Sources */,
+				BEF061431A703961006E519C /* Utils.m in Sources */,
 				BE4C07C81A6FF845008F5D7F /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

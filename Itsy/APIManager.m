@@ -41,6 +41,7 @@
         // pagination info
         // NSDictionary *paginationResp = responseObject[@"pagination"];
         
+        NSLog(@"got results");
         NSArray *results = responseObject[@"results"];
         NSMutableArray *listings = [NSMutableArray new];
         

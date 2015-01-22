@@ -7,10 +7,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
-                <outlet property="searchBar" destination="ioH-tw-Vkq" id="HQ6-oj-5rY"/>
-                <outlet property="searchBarOffset" destination="rqg-F4-x6f" id="wqz-jc-TDJ"/>
-                <outlet property="searchDisplayController" destination="b0m-mZ-gIh" id="Zve-hK-ga1"/>
+                <outlet property="spinner" destination="wQb-Do-2Ab" id="Sg8-a2-eWR"/>
                 <outlet property="tableView" destination="bzC-yn-r76" id="vIT-pT-Q13"/>
+                <outlet property="tableViewYOffset" destination="03J-er-Sj3" id="CQg-hG-W1B"/>
                 <outlet property="view" destination="CpE-qi-ZWn" id="stc-yR-oKu"/>
             </connections>
         </placeholder>
@@ -20,40 +19,23 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="bzC-yn-r76">
-                    <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
-                <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="ioH-tw-Vkq">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="44" id="88n-xE-hKb"/>
-                    </constraints>
-                    <textInputTraits key="textInputTraits"/>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="dka-26-dXH"/>
-                    </connections>
-                </searchBar>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="wQb-Do-2Ab">
+                    <rect key="frame" x="281" y="100" width="37" height="37"/>
+                </activityIndicatorView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="bzC-yn-r76" firstAttribute="top" secondItem="ioH-tw-Vkq" secondAttribute="bottom" id="3K8-My-blZ"/>
-                <constraint firstAttribute="trailing" secondItem="ioH-tw-Vkq" secondAttribute="trailing" id="IOG-aa-2i4"/>
+                <constraint firstItem="bzC-yn-r76" firstAttribute="top" secondItem="CpE-qi-ZWn" secondAttribute="top" id="03J-er-Sj3"/>
+                <constraint firstItem="wQb-Do-2Ab" firstAttribute="top" secondItem="CpE-qi-ZWn" secondAttribute="top" constant="100" id="E5G-J6-r4F"/>
                 <constraint firstItem="bzC-yn-r76" firstAttribute="leading" secondItem="CpE-qi-ZWn" secondAttribute="leading" id="QGo-JI-4Vh"/>
                 <constraint firstAttribute="trailing" secondItem="bzC-yn-r76" secondAttribute="trailing" id="Vi4-Du-DNL"/>
-                <constraint firstItem="ioH-tw-Vkq" firstAttribute="leading" secondItem="CpE-qi-ZWn" secondAttribute="leading" id="kTd-nN-tbQ"/>
+                <constraint firstAttribute="centerX" secondItem="wQb-Do-2Ab" secondAttribute="centerX" id="cpe-KX-LiV"/>
                 <constraint firstAttribute="bottom" secondItem="bzC-yn-r76" secondAttribute="bottom" id="l0K-A5-FcN"/>
-                <constraint firstItem="ioH-tw-Vkq" firstAttribute="top" secondItem="CpE-qi-ZWn" secondAttribute="top" id="rqg-F4-x6f"/>
             </constraints>
             <point key="canvasLocation" x="-252" y="161"/>
         </view>
-        <searchDisplayController id="b0m-mZ-gIh">
-            <connections>
-                <outlet property="delegate" destination="-1" id="tMG-DP-26S"/>
-                <outlet property="searchBar" destination="ioH-tw-Vkq" id="i1D-ik-OGR"/>
-                <outlet property="searchContentsController" destination="-1" id="64B-j5-O7f"/>
-                <outlet property="searchResultsDataSource" destination="-1" id="ikI-jd-abc"/>
-                <outlet property="searchResultsDelegate" destination="-1" id="97Y-Uz-sDb"/>
-            </connections>
-        </searchDisplayController>
     </objects>
 </document>
