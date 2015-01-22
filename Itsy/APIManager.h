@@ -14,6 +14,6 @@
 +(APIManager*)sharedManager;
 
 // in a fleshed out app, the method would take a dict of params as input, as opposed to just a keyword string
--(AFHTTPRequestOperation*)getActiveListings:(NSString*)keywordString page:(NSUInteger)page callback:(void (^)(NSArray *listings, AFHTTPRequestOperation *operation, NSError* error))callback;
+-(AFHTTPRequestOperation*)getActiveListings:(NSString*)keywordString page:(NSUInteger)page callback:(void (^)(NSArray *listings, BOOL hitLimit, AFHTTPRequestOperation *operation, NSError* error))callback;
 
 @end

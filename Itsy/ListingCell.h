@@ -12,6 +12,8 @@
 @interface ListingCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
+@property (weak, nonatomic) IBOutlet UIView *titleContainer;
+@property (weak, nonatomic) IBOutlet UIView *favContainer;
 @property (weak, nonatomic) IBOutlet UILabel *favLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *favStar;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;

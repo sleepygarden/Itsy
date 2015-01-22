@@ -25,6 +25,8 @@
 @property (strong, nonatomic) NSMutableArray *filteredListings;
 
 @property (nonatomic) BOOL isFetchingMoreListings;
+@property (nonatomic) BOOL isAnimatingLoadingSpinner;
+@property (nonatomic) BOOL hitListingsEnd;
 @property (nonatomic) NSUInteger paginationIndex;
 
 @end
@@ -43,6 +45,8 @@
     self.filteredListings = [NSMutableArray new];
     
     self.isFetchingMoreListings = NO;
+    self.isAnimatingLoadingSpinner = NO;
+    self.hitListingsEnd = NO;
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -70,7 +74,7 @@
 
 #pragma mark -
 -(void)addLoadingSpinner{
-    self.isFetchingMoreListings = YES;
+    self.isAnimatingLoadingSpinner = YES;
     [self.tableView beginUpdates];
     [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.filteredListings.count inSection:0]]
                           withRowAnimation:UITableViewRowAnimationTop];
@@ -79,11 +83,12 @@
 }
 
 -(void)removeLoadingSpinner{
-    self.isFetchingMoreListings = NO;
+    self.isAnimatingLoadingSpinner = NO;
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.filteredListings.count inSection:0]]
                           withRowAnimation:UITableViewRowAnimationTop];
     [self.tableView endUpdates];
+
 }
 -(void)resizeTableViewUnderStatusBar {
     self.tableViewYOffset.constant = [[UIApplication sharedApplication] statusBarFrame].size.height;
@@ -96,9 +101,10 @@
 
 -(void)fetchMoreListings {
     if (!self.isFetchingMoreListings){
-        NSLog(@"fetching more");
+        self.isFetchingMoreListings = YES;
         [self addLoadingSpinner];
-        [self.sharedManager getActiveListings:@"collars" page:self.paginationIndex callback:^(NSArray *listings, AFHTTPRequestOperation *operation, NSError *error) {
+        [self.sharedManager getActiveListings:@"collars" page:self.paginationIndex callback:^(NSArray *listings, BOOL hitEnd, AFHTTPRequestOperation *operation, NSError *error) {
+            self.hitListingsEnd = hitEnd;
             [self removeLoadingSpinner];
             if (error){
                 NSLog(@"error getting listing: %@",error.localizedDescription);
@@ -115,6 +121,7 @@
                 [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
                 [self.tableView endUpdates];
             }
+            self.isFetchingMoreListings = NO;
         }];
     }
 }
@@ -144,21 +151,24 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.filteredListings.count + (self.isFetchingMoreListings ? 1:0);
+    return self.filteredListings.count + (self.isAnimatingLoadingSpinner ? 1:0);
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == self.filteredListings.count){ // loading cell
         return [LoadingCell cellHeight];
     }
     else {
+        
         return [ListingCell cellHeight];
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // request once last item starts to ~appear in feed
-    if (scrollView.contentOffset.y >= scrollView.contentSize.height - [ListingCell cellHeight]*4) {
-        if (!self.isFetchingMoreListings){
+    if (scrollView.contentOffset.y >= scrollView.contentSize.height - 800) {
+        // dont load more if search from existing
+
+        if (!self.isFetchingMoreListings && !self.hitListingsEnd && self.listings.count == self.filteredListings.count){
             [self fetchMoreListings];
         }
     }

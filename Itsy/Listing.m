@@ -22,7 +22,7 @@
         //url_570xN
         //url_fullxfull
 
-        self.favorers = [json[@"favorers"] unsignedIntegerValue];
+        self.favorers = [json[@"num_favorers"] unsignedIntegerValue];
     }
     return self;
 }

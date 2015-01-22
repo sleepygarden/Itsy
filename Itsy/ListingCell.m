@@ -8,12 +8,23 @@
 
 #import "ListingCell.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
-
+#import "ItsyStyles.h"
 @implementation ListingCell
 
 - (void)awakeFromNib {
     self.containerView.layer.cornerRadius = 5;
     self.containerView.layer.masksToBounds = YES;
+    
+    self.titleLabel.font = Sanchez(17);
+    self.titleLabel.textColor = itsyBlack;
+    
+    self.favLabel.font = Sanchez(17);
+    self.favLabel.textColor = itsyBlack;
+    
+    self.titleContainer.backgroundColor = [itsyWhite colorWithAlphaComponent:.65];
+    self.favContainer.backgroundColor = [itsyWhite colorWithAlphaComponent:.65];
+    
+    self.containerView.backgroundColor = itsyWhite;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -33,7 +44,7 @@
 }
 
 +(CGFloat)cellHeight {
-    return 200;
+    return 240;
 }
 
 @end

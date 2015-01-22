@@ -7,11 +7,14 @@
 //
 
 #import "LoadingCell.h"
-
+#import "ItsyStyles.h"
 @implementation LoadingCell
 
 - (void)awakeFromNib {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.loadingLabel.font = Sanchez(17);
+    self.loadingLabel.textColor = itsyBlack;
+    self.backgroundColor = itsyOrange;
     [self.spinner startAnimating];
 }
 
