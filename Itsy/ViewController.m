@@ -25,6 +25,7 @@
 @property (strong, nonatomic) NSMutableArray *filteredListings;
 
 @property (nonatomic) BOOL isFetchingMoreListings;
+@property (nonatomic) NSUInteger paginationIndex;
 
 @end
 
@@ -35,6 +36,8 @@
     [super viewDidLoad];
     
     self.sharedManager = [APIManager sharedManager];
+    
+    self.paginationIndex = 1;
     
     self.listings = [NSMutableArray new];
     self.filteredListings = [NSMutableArray new];
@@ -48,7 +51,6 @@
     self.tableView.separatorColor = [UIColor clearColor]; // hide seps
     
     [self setupSearchController];
-    
     [self fetchMoreListings];
     
 }
@@ -96,12 +98,13 @@
     if (!self.isFetchingMoreListings){
         NSLog(@"fetching more");
         [self addLoadingSpinner];
-        [self.sharedManager getActiveListings:@"collars" callback:^(NSArray *listings, AFHTTPRequestOperation *operation, NSError *error) {
+        [self.sharedManager getActiveListings:@"collars" page:self.paginationIndex callback:^(NSArray *listings, AFHTTPRequestOperation *operation, NSError *error) {
             [self removeLoadingSpinner];
             if (error){
                 NSLog(@"error getting listing: %@",error.localizedDescription);
             }
             else {
+                self.paginationIndex++;
                 NSMutableArray *indexPaths = [NSMutableArray new];
                 for (Listing *newListing in listings){
                     [self.listings addObject:newListing];

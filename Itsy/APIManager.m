@@ -28,11 +28,12 @@
     return self;
 }
 
--(AFHTTPRequestOperation*)getActiveListings:(NSString*)keywordString callback:(void (^)(NSArray *listings, AFHTTPRequestOperation *operation, NSError* error))callback{
+-(AFHTTPRequestOperation*)getActiveListings:(NSString*)keywordString page:(NSUInteger)page callback:(void (^)(NSArray *listings, AFHTTPRequestOperation *operation, NSError* error))callback{
 
     NSDictionary *params = @{@"api_key":kAPIKey,
                              @"includes":@"MainImage",
-                             @"keywords":keywordString};
+                             @"keywords":keywordString,
+                             @"page":@(page)};
     AFHTTPRequestOperation *operation = [self GET:@"listings/active/" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         // total count
