@@ -21,6 +21,8 @@
 		BEF061431A703961006E519C /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF061421A703961006E519C /* Utils.m */; };
 		BEF061471A706523006E519C /* ListingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF061461A706523006E519C /* ListingCell.m */; };
 		BEF0614A1A706534006E519C /* ListingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEF061491A706534006E519C /* ListingCell.xib */; };
+		BEF0614E1A70B3EF006E519C /* LoadingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF0614C1A70B3EF006E519C /* LoadingCell.m */; };
+		BEF0614F1A70B3EF006E519C /* LoadingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEF0614D1A70B3EF006E519C /* LoadingCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +62,9 @@
 		BEF061451A706523006E519C /* ListingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListingCell.h; sourceTree = "<group>"; };
 		BEF061461A706523006E519C /* ListingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListingCell.m; sourceTree = "<group>"; };
 		BEF061491A706534006E519C /* ListingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListingCell.xib; sourceTree = "<group>"; };
+		BEF0614B1A70B3EF006E519C /* LoadingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingCell.h; sourceTree = "<group>"; };
+		BEF0614C1A70B3EF006E519C /* LoadingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingCell.m; sourceTree = "<group>"; };
+		BEF0614D1A70B3EF006E519C /* LoadingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingCell.xib; sourceTree = "<group>"; };
 		F5ECF2FAFF9FAB02E0D6D882 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -155,6 +160,7 @@
 				BE365A811A7007B600AAFCD8 /* Constants */,
 				BEF0613F1A700E64006E519C /* Listing */,
 				BEF061481A706527006E519C /* ListingCell */,
+				BEF061501A70B3F2006E519C /* LoadingCell */,
 				BE0DE88D1A6FFE36001861D7 /* ViewController */,
 				BEF061441A703965006E519C /* Utils */,
 				BE4C07D21A6FF845008F5D7F /* Images.xcassets */,
@@ -225,6 +231,16 @@
 				BEF061491A706534006E519C /* ListingCell.xib */,
 			);
 			name = ListingCell;
+			sourceTree = "<group>";
+		};
+		BEF061501A70B3F2006E519C /* LoadingCell */ = {
+			isa = PBXGroup;
+			children = (
+				BEF0614B1A70B3EF006E519C /* LoadingCell.h */,
+				BEF0614C1A70B3EF006E519C /* LoadingCell.m */,
+				BEF0614D1A70B3EF006E519C /* LoadingCell.xib */,
+			);
+			name = LoadingCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -312,6 +328,7 @@
 				BEF0614A1A706534006E519C /* ListingCell.xib in Resources */,
 				BE4C07D61A6FF845008F5D7F /* LaunchScreen.xib in Resources */,
 				BE0DE88C1A6FFE30001861D7 /* ViewController.xib in Resources */,
+				BEF0614F1A70B3EF006E519C /* LoadingCell.xib in Resources */,
 				BE4C07D31A6FF845008F5D7F /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -367,6 +384,7 @@
 				BE365A801A7007B300AAFCD8 /* Constants.m in Sources */,
 				BEF061471A706523006E519C /* ListingCell.m in Sources */,
 				BE365A7C1A70065000AAFCD8 /* APIManager.m in Sources */,
+				BEF0614E1A70B3EF006E519C /* LoadingCell.m in Sources */,
 				BE4C07CE1A6FF845008F5D7F /* ViewController.m in Sources */,
 				BE4C07CB1A6FF845008F5D7F /* AppDelegate.m in Sources */,
 				BEF061431A703961006E519C /* Utils.m in Sources */,

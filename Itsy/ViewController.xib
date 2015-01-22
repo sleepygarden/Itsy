@@ -7,7 +7,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
-                <outlet property="spinner" destination="wQb-Do-2Ab" id="Sg8-a2-eWR"/>
                 <outlet property="tableView" destination="bzC-yn-r76" id="vIT-pT-Q13"/>
                 <outlet property="tableViewYOffset" destination="03J-er-Sj3" id="CQg-hG-W1B"/>
                 <outlet property="view" destination="CpE-qi-ZWn" id="stc-yR-oKu"/>
@@ -22,17 +21,12 @@
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
-                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="wQb-Do-2Ab">
-                    <rect key="frame" x="281" y="100" width="37" height="37"/>
-                </activityIndicatorView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="bzC-yn-r76" firstAttribute="top" secondItem="CpE-qi-ZWn" secondAttribute="top" id="03J-er-Sj3"/>
-                <constraint firstItem="wQb-Do-2Ab" firstAttribute="top" secondItem="CpE-qi-ZWn" secondAttribute="top" constant="100" id="E5G-J6-r4F"/>
                 <constraint firstItem="bzC-yn-r76" firstAttribute="leading" secondItem="CpE-qi-ZWn" secondAttribute="leading" id="QGo-JI-4Vh"/>
                 <constraint firstAttribute="trailing" secondItem="bzC-yn-r76" secondAttribute="trailing" id="Vi4-Du-DNL"/>
-                <constraint firstAttribute="centerX" secondItem="wQb-Do-2Ab" secondAttribute="centerX" id="cpe-KX-LiV"/>
                 <constraint firstAttribute="bottom" secondItem="bzC-yn-r76" secondAttribute="bottom" id="l0K-A5-FcN"/>
             </constraints>
             <point key="canvasLocation" x="-252" y="161"/>
