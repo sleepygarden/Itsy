@@ -22,7 +22,7 @@
                     <rect key="frame" x="0.0" y="44" width="600" height="556"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
-                <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="n8i-Zh-EOt">
+                <searchBar contentMode="redraw" placeholder="Search Etsy" translatesAutoresizingMaskIntoConstraints="NO" id="n8i-Zh-EOt">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                     <textInputTraits key="textInputTraits"/>
                 </searchBar>

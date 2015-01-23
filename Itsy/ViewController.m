@@ -14,15 +14,13 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import "ItsyStyles.h"
 
-@interface ViewController () <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate, UISearchResultsUpdating>
+@interface ViewController () <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
 @property (weak, nonatomic) APIManager* sharedManager;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *searchBarYOffset;
-@property (nonatomic, strong) UISearchController *searchController;
 
 @property (strong, nonatomic) NSMutableArray *listings;
-@property (strong, nonatomic) NSMutableArray *filteredListings;
 @property (strong, nonatomic) NSString *lastSearchedPhrase;
 @property (weak, nonatomic) AFHTTPRequestOperation *fetchOperation;
 
@@ -44,7 +42,6 @@
     self.paginationIndex = 1;
     
     self.listings = [NSMutableArray new];
-    self.filteredListings = [NSMutableArray new];
     
     self.isFetchingMoreListings = NO;
     self.isAnimatingLoadingSpinner = NO;
@@ -55,36 +52,16 @@
     
     [self resizeTableViewUnderStatusBar];
     self.tableView.separatorColor = [UIColor clearColor]; // hide seps
-    self.tableView.backgroundColor = itsyCyan;
-    
+    self.tableView.backgroundColor = [UIColor whiteColor];
     self.searchBar.delegate = self;
-    
-    // adds another search bar, which will search from the current listings by title
-    // i originally put this in because i misunderstood the assignment, and want to leave in the functionality but change the UI
-    // [self setupSearchController];
-    
 }
 
--(void)setupSearchController {
-    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    self.searchController.searchResultsUpdater = self;
-    self.searchController.dimsBackgroundDuringPresentation = NO;
-    self.searchController.hidesNavigationBarDuringPresentation = NO;
-    self.searchController.searchBar.frame = CGRectMake(self.searchController.searchBar.frame.origin.x,
-                                                       self.searchController.searchBar.frame.origin.y,
-                                                       self.searchController.searchBar.frame.size.width,
-                                                       44.0);
-    self.tableView.tableHeaderView = self.searchController.searchBar;
-    self.searchController.searchBar.placeholder = @"Refine Search";
-    
-}
-
-#pragma mark -
+#pragma mark - animations
 -(void)addLoadingSpinner{
     if (!self.isAnimatingLoadingSpinner){
     self.isAnimatingLoadingSpinner = YES;
     [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.filteredListings.count inSection:0]]
+    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.listings.count inSection:0]]
                           withRowAnimation:UITableViewRowAnimationTop];
     [self.tableView endUpdates];
     }
@@ -95,7 +72,7 @@
     if (self.isAnimatingLoadingSpinner){
     self.isAnimatingLoadingSpinner = NO;
     [self.tableView beginUpdates];
-    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.filteredListings.count inSection:0]]
+    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.listings.count inSection:0]]
                           withRowAnimation:UITableViewRowAnimationTop];
     [self.tableView endUpdates];
     }
@@ -110,15 +87,14 @@
     [self resizeTableViewUnderStatusBar];
 }
 
+#pragma mark - GETs
 -(void)fetchMoreListingsWithKeywordString:(NSString*)searchPhrase {
     if (!self.isFetchingMoreListings){
         self.isFetchingMoreListings = YES;
         [self addLoadingSpinner];
         
         self.fetchOperation = [self.sharedManager getActiveListings:searchPhrase page:self.paginationIndex callback:^(NSArray *listings, BOOL hitEnd, AFHTTPRequestOperation *operation, NSError *error) {
-            
-            NSLog(@"search phrase %@, fetch phrase %@, op %lu, fetch op %lu",searchPhrase,self.lastSearchedPhrase,operation.hash,self.fetchOperation.hash);
- 
+             
             [self removeLoadingSpinner];
             self.hitListingsEnd = hitEnd;
             
@@ -132,7 +108,6 @@
                     [self.listings addObject:newListing];
                     [indexPaths addObject:[NSIndexPath indexPathForRow:self.listings.count-1 inSection:0]];
                 }
-                self.filteredListings = [self.listings mutableCopy];
                 [self.tableView beginUpdates];
                 [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
                 [self.tableView endUpdates];
@@ -145,7 +120,7 @@
 #pragma mark - UITableView Delegate + Datasource
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == self.filteredListings.count){ // loading cell
+    if (indexPath.row == self.listings.count){ // loading cell
         static NSString *loadingCellIdentifier = @"LoadingCell";
         LoadingCell *cell = (LoadingCell*)[self.tableView dequeueReusableCellWithIdentifier:loadingCellIdentifier];
         if (cell == nil) {
@@ -162,16 +137,16 @@
             [self.tableView registerNib:[UINib nibWithNibName:listingCellIdentifier bundle:nil] forCellReuseIdentifier:listingCellIdentifier];
             cell = [self.tableView dequeueReusableCellWithIdentifier:listingCellIdentifier];
         }
-        [cell setupWithListing:self.filteredListings[indexPath.row]];
+        [cell setupWithListing:self.listings[indexPath.row]];
         return cell;
     }
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.filteredListings.count + (self.isAnimatingLoadingSpinner ? 1:0);
+    return self.listings.count + (self.isAnimatingLoadingSpinner ? 1:0);
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == self.filteredListings.count){ // loading cell
+    if (indexPath.row == self.listings.count){ // loading cell
         return [LoadingCell cellHeight];
     }
     else {
@@ -184,24 +159,21 @@
     // request once last item starts to ~appear in feed
     if (scrollView.contentOffset.y >= scrollView.contentSize.height - 800) {
         // dont load more if search from existing
-        [self fetchMoreListingsWithKeywordString:self.lastSearchedPhrase];
-        if (!self.isFetchingMoreListings &&
-            !self.hitListingsEnd &&
-            self.listings.count == self.filteredListings.count){
+        
+        if (!self.isFetchingMoreListings && !self.hitListingsEnd && self.lastSearchedPhrase != nil){
             [self fetchMoreListingsWithKeywordString:self.lastSearchedPhrase];
         }
     }
 }
 
--(void)fetchMoreListings {
-    
-}
-
 #pragma mark - UISearchBar
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    if (![self.lastSearchedPhrase isEqualToString:self.searchBar.text] && self.searchBar.text.length > 0){ // submit a new search, clear the old junk
+    // dont re-search if it'd be identical, dont waste data
+    if (![self.lastSearchedPhrase isEqualToString:self.searchBar.text] && self.searchBar.text.length > 0){
         
+        // submit a new search, clear the old junk
+        self.lastSearchedPhrase = nil;
         if (self.fetchOperation){
             [self.fetchOperation pause];
             [self.fetchOperation cancel];
@@ -209,38 +181,11 @@
         }
         self.paginationIndex = 1;
         [self.listings removeAllObjects];
-        [self.filteredListings removeAllObjects];
         [self.tableView reloadData];
         self.lastSearchedPhrase = self.searchBar.text;
         [self fetchMoreListingsWithKeywordString:self.searchBar.text];
     }
     [searchBar resignFirstResponder];
 }
-
-#pragma mark - UISearchController
-
-
-- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    NSString *searchText = self.searchController.searchBar.text;
-    if (searchText.length == 0){
-        self.filteredListings = [self.listings mutableCopy];
-    }
-    else {
-        self.filteredListings = [NSMutableArray new];
-        
-        // ignore accents, etc
-        NSUInteger searchOptions = NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch;
-        
-        for (Listing *listing in self.listings) {
-            NSRange titleRange = NSMakeRange(0, listing.title.length);
-            NSRange foundRange = [listing.title rangeOfString:searchText options:searchOptions range:titleRange];
-            if (foundRange.length > 0) {
-                [self.filteredListings addObject:listing];
-            }
-        }
-        [self.tableView reloadData];
-    }
-}
-
 
 @end

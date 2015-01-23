@@ -23,7 +23,6 @@
 		BEF0614A1A706534006E519C /* ListingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEF061491A706534006E519C /* ListingCell.xib */; };
 		BEF0614E1A70B3EF006E519C /* LoadingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BEF0614C1A70B3EF006E519C /* LoadingCell.m */; };
 		BEF0614F1A70B3EF006E519C /* LoadingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEF0614D1A70B3EF006E519C /* LoadingCell.xib */; };
-		BEF061521A70B9B4006E519C /* Mermaid1001.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BEF061511A70B9B4006E519C /* Mermaid1001.ttf */; };
 		BEF061561A70BFC7006E519C /* Sanchezregular.otf in Resources */ = {isa = PBXBuildFile; fileRef = BEF061551A70BFC7006E519C /* Sanchezregular.otf */; };
 /* End PBXBuildFile section */
 
@@ -67,7 +66,6 @@
 		BEF0614B1A70B3EF006E519C /* LoadingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingCell.h; sourceTree = "<group>"; };
 		BEF0614C1A70B3EF006E519C /* LoadingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingCell.m; sourceTree = "<group>"; };
 		BEF0614D1A70B3EF006E519C /* LoadingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingCell.xib; sourceTree = "<group>"; };
-		BEF061511A70B9B4006E519C /* Mermaid1001.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Mermaid1001.ttf; sourceTree = "<group>"; };
 		BEF061541A70BB36006E519C /* ItsyStyles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ItsyStyles.h; sourceTree = "<group>"; };
 		BEF061551A70BFC7006E519C /* Sanchezregular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Sanchezregular.otf; sourceTree = "<group>"; };
 		F5ECF2FAFF9FAB02E0D6D882 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -253,7 +251,6 @@
 			isa = PBXGroup;
 			children = (
 				BEF061551A70BFC7006E519C /* Sanchezregular.otf */,
-				BEF061511A70B9B4006E519C /* Mermaid1001.ttf */,
 				BEF061541A70BB36006E519C /* ItsyStyles.h */,
 			);
 			name = Fonts;
@@ -343,7 +340,6 @@
 			files = (
 				BEF0614A1A706534006E519C /* ListingCell.xib in Resources */,
 				BE4C07D61A6FF845008F5D7F /* LaunchScreen.xib in Resources */,
-				BEF061521A70B9B4006E519C /* Mermaid1001.ttf in Resources */,
 				BEF061561A70BFC7006E519C /* Sanchezregular.otf in Resources */,
 				BE0DE88C1A6FFE30001861D7 /* ViewController.xib in Resources */,
 				BEF0614F1A70B3EF006E519C /* LoadingCell.xib in Resources */,

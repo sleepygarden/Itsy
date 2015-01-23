@@ -24,6 +24,8 @@
     self.titleContainer.backgroundColor = [itsyWhite colorWithAlphaComponent:.65];
     self.favContainer.backgroundColor = [itsyWhite colorWithAlphaComponent:.65];
     
+    self.containerView.clipsToBounds = YES;
+    
     self.backgroundColor = [UIColor clearColor];
     self.containerView.backgroundColor = itsyWhite;
     self.listingImage.backgroundColor = itsyWhite;
@@ -31,10 +33,13 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     if (selected){
-        self.containerView.backgroundColor = [UIColor colorWithRed:.95 green:.8 blue:.8 alpha:1];
+        self.titleContainer.backgroundColor = [itsyOrange colorWithAlphaComponent:.5];
+        self.favContainer.backgroundColor = [itsyOrange colorWithAlphaComponent:.5];
+
     }
     else {
-        self.containerView.backgroundColor = [UIColor colorWithRed:.95 green:.95 blue:.95 alpha:1];
+        self.titleContainer.backgroundColor = [itsyWhite colorWithAlphaComponent:.65];
+        self.favContainer.backgroundColor = [itsyWhite colorWithAlphaComponent:.65];
     }
 }
 
