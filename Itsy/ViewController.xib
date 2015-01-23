@@ -7,8 +7,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
+                <outlet property="searchBar" destination="n8i-Zh-EOt" id="nFJ-EC-5Rv"/>
+                <outlet property="searchBarYOffset" destination="8bo-Va-0qY" id="Ux8-6L-HHn"/>
                 <outlet property="tableView" destination="bzC-yn-r76" id="vIT-pT-Q13"/>
-                <outlet property="tableViewYOffset" destination="03J-er-Sj3" id="CQg-hG-W1B"/>
                 <outlet property="view" destination="CpE-qi-ZWn" id="stc-yR-oKu"/>
             </connections>
         </placeholder>
@@ -18,18 +19,25 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="bzC-yn-r76">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <rect key="frame" x="0.0" y="44" width="600" height="556"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
+                <searchBar contentMode="redraw" placeholder="Search Etsy" translatesAutoresizingMaskIntoConstraints="NO" id="n8i-Zh-EOt">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                    <textInputTraits key="textInputTraits"/>
+                </searchBar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="bzC-yn-r76" firstAttribute="top" secondItem="CpE-qi-ZWn" secondAttribute="top" id="03J-er-Sj3"/>
+                <constraint firstItem="n8i-Zh-EOt" firstAttribute="leading" secondItem="CpE-qi-ZWn" secondAttribute="leading" id="1By-mL-Pv8"/>
+                <constraint firstItem="n8i-Zh-EOt" firstAttribute="top" secondItem="CpE-qi-ZWn" secondAttribute="top" id="8bo-Va-0qY"/>
                 <constraint firstItem="bzC-yn-r76" firstAttribute="leading" secondItem="CpE-qi-ZWn" secondAttribute="leading" id="QGo-JI-4Vh"/>
                 <constraint firstAttribute="trailing" secondItem="bzC-yn-r76" secondAttribute="trailing" id="Vi4-Du-DNL"/>
+                <constraint firstItem="bzC-yn-r76" firstAttribute="top" secondItem="n8i-Zh-EOt" secondAttribute="bottom" id="cpM-ey-fod"/>
+                <constraint firstAttribute="trailing" secondItem="n8i-Zh-EOt" secondAttribute="trailing" id="ks5-GY-jfq"/>
                 <constraint firstAttribute="bottom" secondItem="bzC-yn-r76" secondAttribute="bottom" id="l0K-A5-FcN"/>
             </constraints>
-            <point key="canvasLocation" x="-252" y="161"/>
+            <point key="canvasLocation" x="-236" y="161"/>
         </view>
     </objects>
 </document>

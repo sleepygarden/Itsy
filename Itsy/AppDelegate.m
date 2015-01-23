@@ -19,10 +19,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    //[Utils testHTMLCleaner];
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     UIWindow *window = [[UIWindow alloc] initWithFrame:screenBounds];
-    
     ViewController *viewController = [[ViewController alloc] init];
     [window setRootViewController:viewController];
     [window makeKeyAndVisible];

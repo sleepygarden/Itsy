@@ -17,19 +17,16 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] initWithBaseURL:[NSURL URLWithString:kAPIBaseURL]];
+        
+        //TODO Error responses come as plain text
+        //instance.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+        //instance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/plain", nil];
     });
     return instance;
 }
 
--(id)init {
-    if (self = [super init]) {
-
-    }
-    return self;
-}
-
--(AFHTTPRequestOperation*)getActiveListings:(NSString*)keywordString page:(NSUInteger)page callback:(void (^)(NSArray *listings, AFHTTPRequestOperation *operation, NSError* error))callback{
-
+-(AFHTTPRequestOperation*)getActiveListings:(NSString*)keywordString page:(NSUInteger)page callback:(void (^)(NSArray *listings, BOOL hitEnd, AFHTTPRequestOperation *operation, NSError* error))callback{
+    
     NSDictionary *params = @{@"api_key":kAPIKey,
                              @"includes":@"MainImage",
                              @"keywords":keywordString,
@@ -37,24 +34,26 @@
     AFHTTPRequestOperation *operation = [self GET:@"listings/active/" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         // total count
-        NSUInteger count = [responseObject[@"count"] unsignedIntegerValue];
+        // unused - NSUInteger count = [responseObject[@"count"] unsignedIntegerValue];
         
         // pagination info
         NSDictionary *paginationResp = responseObject[@"pagination"];
-        
-        NSLog(@"got results count %lu\npagination: %@", count,paginationResp);
-        
+
         NSArray *results = responseObject[@"results"];
         NSMutableArray *listings = [NSMutableArray new];
         
         for (NSDictionary *listingJson in results){
             [listings addObject:[[Listing alloc] initWithParams:listingJson]];
         }
-        callback(listings, operation, nil);
+        BOOL hitLimit = NO; // no more listings to load
+        if ([paginationResp[@"effective_offset"] unsignedIntegerValue] >= 50000){
+            hitLimit = YES;
+        }
+        callback(listings, hitLimit, operation, nil);
 
 
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        callback(nil, operation, error);
+        callback(nil, NO, operation, error);
     }];
     [operation resume];
     return operation;

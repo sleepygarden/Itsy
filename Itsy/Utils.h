@@ -11,4 +11,6 @@
 @interface Utils : NSObject
 +(NSString*)cleanHTMLCodes:(NSString*)htmlString;
 +(void)testHTMLCleaner;
++(void)listAppFonts;
+
 @end
