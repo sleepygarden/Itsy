@@ -51,7 +51,13 @@
 }
 
 +(CGFloat)cellHeight {
-    return 330;
+    NSString *deviceType = [UIDevice currentDevice].model;
+    if([deviceType isEqualToString:@"iPhone"]) {
+        return 330;
+    }
+    else {
+        return 500;
+    }
 }
 
 @end
