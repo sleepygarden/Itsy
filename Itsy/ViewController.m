@@ -12,17 +12,17 @@
 #import "Listing.h"
 #import "LoadingCell.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
+#import "ItsyStyles.h"
 
-@interface ViewController () <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate, UISearchResultsUpdating>
+@interface ViewController () <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
 @property (weak, nonatomic) APIManager* sharedManager;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-
-@property (nonatomic, strong) UISearchController *searchController;
-
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableViewYOffset;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *searchBarYOffset;
 
 @property (strong, nonatomic) NSMutableArray *listings;
-@property (strong, nonatomic) NSMutableArray *filteredListings;
+@property (strong, nonatomic) NSString *lastSearchedPhrase;
+@property (weak, nonatomic) AFHTTPRequestOperation *fetchOperation;
 
 @property (nonatomic) BOOL isFetchingMoreListings;
 @property (nonatomic) BOOL isAnimatingLoadingSpinner;
@@ -42,7 +42,6 @@
     self.paginationIndex = 1;
     
     self.listings = [NSMutableArray new];
-    self.filteredListings = [NSMutableArray new];
     
     self.isFetchingMoreListings = NO;
     self.isAnimatingLoadingSpinner = NO;
@@ -53,9 +52,13 @@
     
     [self resizeTableViewUnderStatusBar];
     self.tableView.separatorColor = [UIColor clearColor]; // hide seps
+    self.tableView.backgroundColor = itsyCyan;
     
-    [self setupSearchController];
-    [self fetchMoreListings];
+    self.searchBar.delegate = self;
+    
+    // adds another search bar, which will search from the current listings by title
+    // i originally put this in because i misunderstood the assignment, and want to leave in the functionality but change the UI
+    // [self setupSearchController];
     
 }
 
@@ -69,29 +72,34 @@
                                                        self.searchController.searchBar.frame.size.width,
                                                        44.0);
     self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.searchController.searchBar.placeholder = @"Refine Search";
     
 }
 
 #pragma mark -
 -(void)addLoadingSpinner{
+    if (!self.isAnimatingLoadingSpinner){
     self.isAnimatingLoadingSpinner = YES;
     [self.tableView beginUpdates];
     [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.filteredListings.count inSection:0]]
                           withRowAnimation:UITableViewRowAnimationTop];
     [self.tableView endUpdates];
+    }
     
 }
 
 -(void)removeLoadingSpinner{
+    if (self.isAnimatingLoadingSpinner){
     self.isAnimatingLoadingSpinner = NO;
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.filteredListings.count inSection:0]]
                           withRowAnimation:UITableViewRowAnimationTop];
     [self.tableView endUpdates];
+    }
 
 }
 -(void)resizeTableViewUnderStatusBar {
-    self.tableViewYOffset.constant = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    self.searchBarYOffset.constant = [[UIApplication sharedApplication] statusBarFrame].size.height;
     [self.view layoutIfNeeded];
 }
 
@@ -99,13 +107,18 @@
     [self resizeTableViewUnderStatusBar];
 }
 
--(void)fetchMoreListings {
+-(void)fetchMoreListingsWithKeywordString:(NSString*)searchPhrase {
     if (!self.isFetchingMoreListings){
         self.isFetchingMoreListings = YES;
         [self addLoadingSpinner];
-        [self.sharedManager getActiveListings:@"collars" page:self.paginationIndex callback:^(NSArray *listings, BOOL hitEnd, AFHTTPRequestOperation *operation, NSError *error) {
-            self.hitListingsEnd = hitEnd;
+        
+        self.fetchOperation = [self.sharedManager getActiveListings:searchPhrase page:self.paginationIndex callback:^(NSArray *listings, BOOL hitEnd, AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"search phrase %@, fetch phrase %@, op %lu, fetch op %lu",searchPhrase,self.lastSearchedPhrase,operation.hash,self.fetchOperation.hash);
+ 
             [self removeLoadingSpinner];
+            self.hitListingsEnd = hitEnd;
+            
             if (error){
                 NSLog(@"error getting listing: %@",error.localizedDescription);
             }
@@ -136,6 +149,7 @@
             [self.tableView registerNib:[UINib nibWithNibName:loadingCellIdentifier bundle:nil] forCellReuseIdentifier:loadingCellIdentifier];
             cell = [self.tableView dequeueReusableCellWithIdentifier:loadingCellIdentifier];
         }
+        [cell.spinner startAnimating];
         return cell;
     }
     else { // listing cell
@@ -167,37 +181,37 @@
     // request once last item starts to ~appear in feed
     if (scrollView.contentOffset.y >= scrollView.contentSize.height - 800) {
         // dont load more if search from existing
-
-        if (!self.isFetchingMoreListings && !self.hitListingsEnd && self.listings.count == self.filteredListings.count){
-            [self fetchMoreListings];
+        [self fetchMoreListingsWithKeywordString:self.lastSearchedPhrase];
+        if (!self.isFetchingMoreListings &&
+            !self.hitListingsEnd &&
+            self.listings.count == self.filteredListings.count){
+            [self fetchMoreListingsWithKeywordString:self.lastSearchedPhrase];
         }
     }
 }
 
-#pragma mark - UISearchController
+-(void)fetchMoreListings {
+    
+}
 
+#pragma mark - UISearchBar
 
-- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    NSString *searchText = self.searchController.searchBar.text;
-    if (searchText.length == 0){
-        self.filteredListings = [self.listings mutableCopy];
-    }
-    else {
-        self.filteredListings = [NSMutableArray new];
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    if (![self.lastSearchedPhrase isEqualToString:self.searchBar.text] && self.searchBar.text.length > 0){ // submit a new search, clear the old junk
         
-        // ignore accents, etc
-        NSUInteger searchOptions = NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch;
-        
-        for (Listing *listing in self.listings) {
-            NSRange titleRange = NSMakeRange(0, listing.title.length);
-            NSRange foundRange = [listing.title rangeOfString:searchText options:searchOptions range:titleRange];
-            if (foundRange.length > 0) {
-                [self.filteredListings addObject:listing];
-            }
+        if (self.fetchOperation){
+            [self.fetchOperation pause];
+            [self.fetchOperation cancel];
+            self.isFetchingMoreListings = NO;
         }
+        self.paginationIndex = 1;
+        [self.listings removeAllObjects];
+        [self.filteredListings removeAllObjects];
         [self.tableView reloadData];
+        self.lastSearchedPhrase = self.searchBar.text;
+        [self fetchMoreListingsWithKeywordString:self.searchBar.text];
     }
+    [searchBar resignFirstResponder];
 }
-
 
 @end

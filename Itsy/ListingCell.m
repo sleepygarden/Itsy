@@ -24,7 +24,9 @@
     self.titleContainer.backgroundColor = [itsyWhite colorWithAlphaComponent:.65];
     self.favContainer.backgroundColor = [itsyWhite colorWithAlphaComponent:.65];
     
+    self.backgroundColor = [UIColor clearColor];
     self.containerView.backgroundColor = itsyWhite;
+    self.listingImage.backgroundColor = itsyWhite;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -38,13 +40,13 @@
 
 -(void)setupWithListing:(Listing*)listing {
     self.favLabel.text = [NSString stringWithFormat:@"%lu",listing.favorers];
-    self.titleLabel.text = listing.title;
+    self.titleLabel.text = listing.title;    
     [self.listingImage setImageWithURL:listing.imgURL placeholderImage:[UIImage imageNamed:@"ScreenShot"]];
     
 }
 
 +(CGFloat)cellHeight {
-    return 240;
+    return 330;
 }
 
 @end
