@@ -15,7 +15,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-dW-Leu">
                     <rect key="frame" x="5" y="5" width="404" height="342"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ScreenShot" translatesAutoresizingMaskIntoConstraints="NO" id="80M-h6-aEe">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="temp_spiral" translatesAutoresizingMaskIntoConstraints="NO" id="80M-h6-aEe">
                             <rect key="frame" x="-0.5" y="0.0" width="405.5" height="322"/>
                             <color key="backgroundColor" red="0.36078431370000003" green="0.67843137249999996" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -110,7 +110,7 @@
         </view>
     </objects>
     <resources>
-        <image name="ScreenShot" width="182" height="204"/>
         <image name="orange_star" width="80" height="76"/>
+        <image name="temp_spiral" width="411" height="453"/>
     </resources>
 </document>

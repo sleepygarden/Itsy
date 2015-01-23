@@ -46,7 +46,7 @@
 -(void)setupWithListing:(Listing*)listing {
     self.favLabel.text = [NSString stringWithFormat:@"%lu",listing.favorers];
     self.titleLabel.text = listing.title;    
-    [self.listingImage setImageWithURL:listing.imgURL placeholderImage:[UIImage imageNamed:@"ScreenShot"]];
+    [self.listingImage setImageWithURL:listing.imgURL placeholderImage:[UIImage imageNamed:@"temp_spiral"]];
     
 }
 
