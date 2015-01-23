@@ -14,13 +14,15 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import "ItsyStyles.h"
 
-@interface ViewController () <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
+@interface ViewController () <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate, UISearchResultsUpdating>
 @property (weak, nonatomic) APIManager* sharedManager;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *searchBarYOffset;
+@property (nonatomic, strong) UISearchController *searchController;
 
 @property (strong, nonatomic) NSMutableArray *listings;
+@property (strong, nonatomic) NSMutableArray *filteredListings;
 @property (strong, nonatomic) NSString *lastSearchedPhrase;
 @property (weak, nonatomic) AFHTTPRequestOperation *fetchOperation;
 
@@ -42,6 +44,7 @@
     self.paginationIndex = 1;
     
     self.listings = [NSMutableArray new];
+    self.filteredListings = [NSMutableArray new];
     
     self.isFetchingMoreListings = NO;
     self.isAnimatingLoadingSpinner = NO;
@@ -213,5 +216,31 @@
     }
     [searchBar resignFirstResponder];
 }
+
+#pragma mark - UISearchController
+
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    NSString *searchText = self.searchController.searchBar.text;
+    if (searchText.length == 0){
+        self.filteredListings = [self.listings mutableCopy];
+    }
+    else {
+        self.filteredListings = [NSMutableArray new];
+        
+        // ignore accents, etc
+        NSUInteger searchOptions = NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch;
+        
+        for (Listing *listing in self.listings) {
+            NSRange titleRange = NSMakeRange(0, listing.title.length);
+            NSRange foundRange = [listing.title rangeOfString:searchText options:searchOptions range:titleRange];
+            if (foundRange.length > 0) {
+                [self.filteredListings addObject:listing];
+            }
+        }
+        [self.tableView reloadData];
+    }
+}
+
 
 @end
